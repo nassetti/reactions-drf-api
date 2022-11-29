@@ -63,7 +63,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', 'reaction-drf-api.herokuapp.com']
+ALLOWED_HOSTS = ['localhost', 'reactions-drf-api.herokuapp.com']
 
 
 # Application definition
