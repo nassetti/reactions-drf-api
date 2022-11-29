@@ -1,5 +1,6 @@
 from django.db.models import Count
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, filters
+from django_filters.rest_framework import DjangoFilterBackend
 from reactions_drf_api.permissions import IsOwnerOrReadOnly
 from .models import Post
 from .serializers import PostSerializer
@@ -13,13 +14,28 @@ class PostList(generics.ListCreateAPIView):
         comments_count=Count('comment', distinct=True)
     ).order_by('-created_at')
     filter_backends = [
-        filters.OrderingFilter
+        filters.OrderingFilter,
+        filters.SearchFilter,
+        DjangoFilterBackend,
+    ]
+    filterset_fields = [
+        # users feed (who you follow)
+        'owner__followed__owner__profile',
+        # posts you've liked
+        'likes__owner__profile',
+        # your posts
+        'owner__profile',
+    ]
+    search_fields = [
+        'owner__username',
+        'title',
     ]
     ordering_fields = [
         'likes_count',
         'comments_count',
         'likes__created_at',
     ]
+
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
