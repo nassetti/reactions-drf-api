@@ -7,6 +7,7 @@ from .models import Profile
 from .serializers import ProfileSerializer
 from reactions_drf_api.permissions import IsOwnerOrReadOnly
 
+
 class ProfileList(APIView):
     def get(self, request):
         profiles = Profile.objects.all()
@@ -14,6 +15,7 @@ class ProfileList(APIView):
             profiles, many=True, context={'request': request}
         )
         return Response(serializer.data)
+
 
 class ProfileDetail(APIView):
     serializer_class = ProfileSerializer
@@ -26,7 +28,7 @@ class ProfileDetail(APIView):
             return profile
         except Profile.DoesNotExist:
             raise Http404
-    
+
     def get(self, request, pk):
         profile = self.get_object(pk)
         serializer = ProfileSerializer(
